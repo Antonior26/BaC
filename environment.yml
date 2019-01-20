@@ -3,11 +3,11 @@ channels:
   - etetoolkit
   - bioconda
   - defaults
+  - conda-forge
 dependencies:
   - argparse=1.4.0=py36_0
-  - blast=2.2.31=1
   - prodigal=2.6.3=0
-  - rgi=3.1.0=py_0
+  - rgi==4.2.2
   - biopython=1.71=py36h637b7d7_0
   - bzip2=1.0.6=h9a117a8_4
   - django=2.0.5=py36hd476221_0

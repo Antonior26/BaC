@@ -63,6 +63,9 @@ services:
       - ALLOWED_HOST=localhost;127.0.0.1;0.0.0.0;web
       - STATIC_ROOT=/static
       - MEDIA_ROOT=/media
+      - BAC_DB_PATH=/media
+      - BAC_SEQUENCE_RESULTS=/media/sequences/results
+      - BAC_REFERENCE=/media/sequences
 
   # Celery worker
   celery:
@@ -90,3 +93,6 @@ services:
       - ALLOWED_HOST=localhost;127.0.0.1;0.0.0.0;web
       - STATIC_ROOT=/static
       - MEDIA_ROOT=/media
+      - BAC_DB_PATH=/media
+      - BAC_SEQUENCE_RESULTS=/media/sequences/results
+      - BAC_REFERENCE=/media/sequences

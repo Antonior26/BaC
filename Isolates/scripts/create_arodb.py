@@ -1,22 +1,30 @@
+import json
 import logging
 import os
 
-from django.contrib.auth.models import User
+from Isolates.models import AroGene, AroCategory
 
 logging.basicConfig(level=logging.INFO)
 
 
+def create_aro_db():
+    g = json.load(open(os.path.join(os.getenv('BAC_DB_PATH'), 'localDB', 'card.json')))
+    for i in g:
+        if i not in ['_version', '_comment', '_timestamp']:
+            categories = g[i].pop('ARO_category')
+            creation = {key.lower(): g[i][key] for key in g[i] if key not in ['model_param', 'model_sequences']}
+            print(creation.keys())
+            aro_gene = AroGene.objects.create(**creation)
+            for c in categories:
+                creation_categories = {key.lower(): categories[c][key] for key in categories[c]}
+                print(creation_categories)
+                category = AroCategory.objects.get_or_create(
+                    category_aro_accession=creation_categories['category_aro_accession'],
+                    defaults=creation_categories
+                )
+                aro_gene.aro_category.add(category[0])
+
+
 def run():
-    logging.warning('This script will create a superuser based on the values of environment variables:  SUPERUSER,'
-                    'SUPERUSER_PASSWORD and SUPERUSER_EMAIL, make sure you have set this variables and you are not'
-                    'using default values in production system')
-    logging.info('Checking for superuser in DB...')
-    if not User.objects.filter(username=os.getenv('SUPERUSER', 'bac')):
-        User.objects.create_superuser(
-            email=os.getenv('SUPERUSER_EMAIL'),
-            username=os.getenv('SUPERUSER', 'bac'),
-            password=os.getenv('SUPERUSER_PASSWORD', 'bac')
-        )
-        logging.info('Superuser {} has been created.'.format(os.getenv('SUPERUSER', 'bac')))
-    else:
-        logging.info('Superuser {} already exists, nothing to do.'.format(os.getenv('SUPERUSER', 'bac')))
+    if AroGene.objects.filter().count() == 0:
+        create_aro_db()

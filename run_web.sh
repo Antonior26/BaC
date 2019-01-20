@@ -14,5 +14,7 @@ python manage.py runscript load_initial_data
 echo "collecting static files"
 python manage.py collectstatic --noinput
 # start development server on public ip interface, on port 8000
+echo "creating ARO DB"
+python manage.py runscript create_arodb
 echo "Starting Application"
 python manage.py runserver 0.0.0.0:8000

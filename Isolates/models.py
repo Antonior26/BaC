@@ -356,6 +356,7 @@ class AroGeneMatch(models.Model):
     orf_dna_sequence = models.CharField(editable=False, max_length=5000)
     orf_prot_sequence = models.CharField(editable=False, max_length=5000)
     perc_identity = models.FloatField(editable=False)
+    nudged = models.BooleanField(editable=False, default=False)
 
     @classmethod
     def from_rgi_result(cls, contig_hits, result):
@@ -370,7 +371,8 @@ class AroGeneMatch(models.Model):
                                'model_type_id',
                                'ARO_accession',
                                'ARO_name',
-                               'ARO_category']
+                               'ARO_category',
+                           ]
                            }
         cls.objects.create(contig=contig, aro_gene=aro_gene, result=result, **creation_values)
 
