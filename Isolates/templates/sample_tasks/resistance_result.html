@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load render_table from django_tables2 %}
+
+{% block body %}
+    <div class="container">
+
+        <div class="col py-md-5">
+                <a href="{{ sample.isolate.get_absolute_url }}">Back to Isolate</a>
+                <h1> Sample {{ sample.identifier }}</h1>
+
+            <div class="py-md-3"><h2>Antibiotic Resistance Analysis Results</h2></div>
+
+                {% render_table table %}
+            </div>
+    </div>
+    <div class="container">
+    </div>
+{% endblock %}

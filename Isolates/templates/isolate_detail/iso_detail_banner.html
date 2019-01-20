@@ -1,0 +1,19 @@
+<div class="jumbotron">
+    <p class="lead">Patient: <a href="{{ isolate.patient.get_absolute_url }}">{{ isolate.patient.identifier }}</a></p>
+    <p class="lead">Species: <a href="{{ isolate.species.get_absolute_url }}"> {{ isolate.species}}</a></p>
+    <hr class="my-4">
+    <p>Samples: {{ isolate.get_samples_names | join:', ' }}</p>
+    <p>Phenotypes:
+        {% if not isolate.phenotype.all%}
+            No phenotypes found for this isolate
+        {% endif %}
+        {% for p in isolate.phenotype.all %}
+        <a href="{{ p.ontology_term.get_absolute_url}}">{{ p.ontology_term }}</a>
+        {% if not forloop.last %},{% endif %}
+    {% endfor %}
+    </p>
+    <p>Collected on: {{ isolate.collection_date }}</p>
+    <p>Cultured on: {{ isolate.culture_type }}</p>
+    <p>Collected from tissue: {{ isolate.tissue_origin }}</p>
+    <p><a href="{% url 'update-isolate-view' pk=isolate.identifier %}" class="fas fa-edit">Edit</a></p>
+</div>

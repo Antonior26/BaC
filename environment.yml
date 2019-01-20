@@ -1,0 +1,47 @@
+name: env
+channels:
+  - etetoolkit
+  - bioconda
+  - defaults
+dependencies:
+  - argparse=1.4.0=py36_0
+  - blast=2.2.31=1
+  - prodigal=2.6.3=0
+  - rgi=3.1.0=py_0
+  - biopython=1.71=py36h637b7d7_0
+  - bzip2=1.0.6=h9a117a8_4
+  - django=2.0.5=py36hd476221_0
+  - ncurses=6.1=hf484d3e_0
+  - numpy=1.14.2=py36hdbf6ddf_1
+  - openssl=1.0.2o=h20670df_0
+  - pip=10.0.1=py36_0
+  - python=3.6.5=hc3d631a_2
+  - argtable2=2.13=0
+  - muscle=3.8.31=he5e28f3_0
+  - ete3=3.1.1=pyhf5214e1_0
+  - pip:
+    - bootstrap-admin==0.3.9
+    - celery==4.1.0
+    - django-bootstrap4==0.0.6
+    - django-celery-results==1.0.1
+    - django-el-pagination==3.2.4
+    - django-extensions==2.0.7
+    - django-filter==1.1.0
+    - django-grappelli==2.11.1
+    - django-jet==1.0.7
+    - django-tables2==2.0.0a3
+    - factory-boy==2.11.1
+    - faker==0.8.15
+    - filetype==1.0.1
+    - ipython-genutils==0.2.0
+    - kombu==4.1.0
+    - mock==2.0.0
+    - more-itertools==4.1.0
+    - pandas==0.23.0
+    - plotly==2.7.0
+    - psycopg2==2.7.4
+    - psycopg2-binary==2.7.4
+    - pytest==3.5.1
+    - python-dateutil==2.7.3
+    - requests==2.18.4
+    - urllib3==1.22

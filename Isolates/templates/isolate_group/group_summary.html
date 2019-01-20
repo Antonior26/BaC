@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container">
+        <div class="col py-md-5">
+            <h1> {{ name }}</h1>
+            {% include 'isolate_group/group_banner.html' %}
+            <hr>
+            <div class="py-md-5"><h2>Drug Class Resistance History</h2></div>
+            <div id="plot1" class="responsive-plot">{{ history_plot | safe }}</div>
+            {% include 'isolate_group/group_aro_summary.html' %}
+
+        </div>
+
+    </div>
+{% endblock %}

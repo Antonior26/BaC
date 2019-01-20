@@ -1,0 +1,7 @@
+{% load bootstrap4 %}
+
+<form action="{% url 'create-isolate-view' %}" method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form  %}
+    {% bootstrap_button 'create' button_class='btn btn-block' %}
+</form>

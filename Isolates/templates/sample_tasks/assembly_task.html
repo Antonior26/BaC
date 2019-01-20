@@ -1,0 +1,22 @@
+<div class="card">
+    {%  if component_task.task.status == 'SUCCESS'  %}
+        <div class="card-header text-white bg-success " data-toggle="collapse" data-target="#{{ component_task.pk }}"> {{ component_task.component_type }} (Completed on {{ component_task.last_update_date  }})  - click for details -</div>
+    {% elif component_task.task.status == 'FAILURE' %}
+        <div class="card-header text-white bg-danger " data-toggle="collapse" data-target="#{{ component_task.pk }}">{{ component_task.component_type }} (Failed on {{ component_task.last_update_date  }})  - click for details -</div>
+    {% else %}
+        <div class="card-header text-white bg-info " data-toggle="collapse" data-target="#{{ component_task.pk }}">{{ component_task.component_type }} (Started on {{ component_task.last_update_date  }}) - click for details -</div>
+    {% endif %}
+
+    <div class="card-body collapse" id="{{ component_task.pk }}">
+        <h5 class="card-title">Component type: {{ component_task.component_type }}</h5>
+        <h5 class="card-title">Component Id: {{ component_task.pk }}</h5>
+        <p class="card-text">Started on {{ component_task.creation_date }}</p>
+        <p class="card-text">Last Update on {{ component_task.last_update_date }}</p>
+        <p class="card-text">State: {{ component_task.task.status }}</p>
+        {% if component_task.task.status == 'SUCCESS' %}
+            <p><a href="{% url 'sample-result-view' pk=sample.pk tool=component_task.component_type %}">View Results</a></p>
+        {% endif %}
+
+
+    </div>
+</div>

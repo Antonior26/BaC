@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block head %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% endblock %}
+
+
+
+{% block body %}
+    <div class="col py-md-5">
+        {% if create %}
+            {% include 'crud/isolate/create_form.html' %}
+        {% else %}
+            {% include 'crud/isolate/update_form.html' %}
+        {% endif %}
+    </div>
+
+
+<script>
+
+    $("select[name$='phenotypes']").select2({
+        ajax: {
+            url: "https://www.ebi.ac.uk/ols/api/search",
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term + '*', // search term
+                    ontology: 'omp'
+                };
+            },
+            processResults: function (data, params) {
+
+                return {
+                    results: get_results(data.response.docs)
+                };
+            },
+            cache: true
+        },
+        placeholder: 'Search for a repository',
+        escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+        minimumInputLength: 1,
+        templateResult: formatRepo,
+        templateSelection: formatRepoSelection
+    });
+
+    function get_results(docs) {
+        for (index = 0; index < docs.length; ++index){
+            docs[index].id = docs[index]['ontology_name'] + ':::' + docs[index]['obo_id'] + ':::' + docs[index]['label'] + ':::' + docs[index]['description']
+        }
+        return docs
+    }
+
+    function formatRepo (repo) {
+        return '<div><p><strong>'+repo.label+'</strong></p><p>Ontology: '+repo.ontology_name+'</p><p>'+repo.description+'</p></div>'
+    }
+    function formatRepoSelection (repo) {
+        return repo.text || repo.label;
+    }
+
+
+    {% for selected in form.initial.phenotypes %}
+    var pheSelect = $("select[name$='phenotypes']");
+        $.ajax({
+            type: 'GET',
+            url: "https://www.ebi.ac.uk/ols/api/select?ontology={{ selected.0 }}&q={{ selected.1 }}"
+        }).then(function (data) {
+            // create the option and append to Select2
+            console.log(data);
+            data = get_results(data.response.docs[0]);
+            data.id = data['ontology_name'] + ':::' + data['obo_id'] + ':::' + data['label'] + ':::' + data['description'];
+            var option = new Option(data.label, data.id, true, true);
+            pheSelect.append(option).trigger('change');
+
+            // manually trigger the `select2:select` event
+            pheSelect.trigger({
+                type: 'select2:select',
+                params: {
+                    data: data
+                }
+            });
+        });
+    {% endfor %}
+</script>
+
+{% endblock %}

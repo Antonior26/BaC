@@ -1,0 +1,55 @@
+
+<div class="py-md-5"><h2>Antibiotic Resistance Genes</h2><h4>(Based on <a href="https://card.mcmaster.ca/about">ARO</a>)</h4></div>
+
+<div class="card-group">
+
+{% for key, value in aro_summary.items %}
+{% if key != 'AMR Gene Family' and key != 'Antibiotic' %}
+<div class="card bg-light mb-3">
+  <div class="card-header bg-primary text-white" id="{{ key }}">{{key}}</div>
+  <div class="card-body">
+    {% for item in value %}
+
+    {% if item.new %}
+        <a class="card-text text-danger" href="#">{{item.aro_gene__aro_category__category_aro_name}} ({{ item.count }}) <i class="fas fa-exclamation-circle"></i></a>
+        {% elif item.risk  %}
+        <a class="card-text text-warning" href="#">{{item.aro_gene__aro_category__category_aro_name}} ({{ item.count }}) <i class="fas fa-exclamation-triangle"></i></a>
+        {% else %}
+        <a class="card-text" href="#">{{item.aro_gene__aro_category__category_aro_name}} ({{ item.count }})</a>
+    {% endif %}
+        {% if not forloop.last%}
+            ,
+        {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+{% endfor %}
+</div>
+
+{% for key, value in aro_summary.items %}
+{% if key == 'AMR Gene Family' or key == 'Antibiotic' %}
+<div class="card bg-light mb-3">
+  <div class="card-header bg-primary text-white" id="{{ key }}">{{key}}</div>
+  <div class="card-body">
+    {% for item in value %}
+
+    {% if item.new %}
+        <a class="card-text text-danger" href="#">{{item.aro_gene__aro_category__category_aro_name}} ({{ item.count }}) <i class="fas fa-exclamation-circle"></i></a>
+        {% elif item.risk %}
+        <a class="card-text text-warning" href="#">{{item.aro_gene__aro_category__category_aro_name}} ({{ item.count }}) <i class="fas fa-exclamation-triangle"></i></a>
+        {% else %}
+        <a class="card-text" href="#">{{item.aro_gene__aro_category__category_aro_name}} ({{ item.count }})</a>
+    {% endif %}
+
+        {% if not forloop.last%}
+            ,
+        {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+{% endfor %}
+
+
+

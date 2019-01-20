@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load render_table from django_tables2 %}
+
+{% block body %}
+    <div class="container">
+        <div class="col py-md-5">
+
+                <h1> Isolate {{ isolate.identifier }}</h1>
+
+            {% include 'isolate_detail/iso_detail_banner.html' %}
+            <hr>
+                {% for sample in isolate.samples.all %}
+                    <div class="py-md-3"><h2>Pipeline Results for sample: {{ sample.identifier }}</h2></div>
+                    {% for component_task in sample.component.all %}
+                        {% include 'sample_tasks/assembly_task.html' %}
+                    {% endfor %}
+                {% endfor %}
+            </div>
+    </div>
+    <div class="container">
+
+
+    </div>
+{% endblock %}
