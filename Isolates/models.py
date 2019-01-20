@@ -372,6 +372,8 @@ class AroGeneMatch(models.Model):
                                'ARO_accession',
                                'ARO_name',
                                'ARO_category',
+                               'note'
+
                            ]
                            }
         cls.objects.create(contig=contig, aro_gene=aro_gene, result=result, **creation_values)
