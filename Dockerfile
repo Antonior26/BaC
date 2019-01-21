@@ -26,3 +26,4 @@ RUN tar xvjf data
 WORKDIR /media/
 RUN rgi load -i /card.json --local
 RUN cpanm install JSON::RPC::Client
+WORKDIR /app/
