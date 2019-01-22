@@ -6,9 +6,9 @@ services:
     image: postgres:9.6.9
     restart: always
     environment:
-      POSTGRES_USER: ${DATABASE_USER}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: bac
+      POSTGRES_PASSWORD: E7470
+      POSTGRES_DB: bac
   adminer:
     image: adminer
     restart: always
