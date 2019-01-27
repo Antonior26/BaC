@@ -13,11 +13,9 @@ def create_aro_db():
         if i not in ['_version', '_comment', '_timestamp']:
             categories = g[i].pop('ARO_category')
             creation = {key.lower(): g[i][key] for key in g[i] if key not in ['model_param', 'model_sequences']}
-            print(creation.keys())
             aro_gene = AroGene.objects.create(**creation)
             for c in categories:
                 creation_categories = {key.lower(): categories[c][key] for key in categories[c]}
-                print(creation_categories)
                 category = AroCategory.objects.get_or_create(
                     category_aro_accession=creation_categories['category_aro_accession'],
                     defaults=creation_categories

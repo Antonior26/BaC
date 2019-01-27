@@ -4,6 +4,12 @@
 echo "Waiting 10s for PSQL to start"
 sleep 15
 # migrate db, so we have the latest db schema
+echo "creating card db"
+cd /media/
+wget https://card.mcmaster.ca/latest/data
+tar xvjf data
+rgi load -i card.json --local
+cd /app/
 echo "Running Migrations"
 python manage.py migrate --noinput
 # Create superuser and load reference data
