@@ -364,18 +364,9 @@ class AroGeneMatch(models.Model):
         contig = hit['orf_from']
         aro_gene = AroGene.objects.get(model_id=hit['model_id'])
         creation_values = {key.lower(): hit[key]
-                           for key in hit if key not in [
-                               'model_id',
-                               'model_name',
-                               'model_type',
-                               'model_type_id',
-                               'ARO_accession',
-                               'ARO_name',
-                               'ARO_category',
-                               'note'
-
-                           ]
+                           for key in hit if key.lower() in [f.name for f in cls._meta.fields]
                            }
+        print (creation_values)
         cls.objects.create(contig=contig, aro_gene=aro_gene, result=result, **creation_values)
 
 
@@ -386,14 +377,7 @@ class AroGeneMatch(models.Model):
         contig = hit['orf_from']
         aro_gene = qs[random.randint(0, qs.aggregate(count=Count('pk'))['count'] - 1)]
         creation_values = {key.lower(): hit[key]
-                           for key in hit if key not in [
-                               'model_id',
-                               'model_name',
-                               'model_type',
-                               'model_type_id',
-                               'ARO_accession',
-                               'ARO_name',
-                               'ARO_category']
+                           for key in hit if key in [f.name for f in cls._meta.fields]
                            }
         cls.objects.create(contig=contig, aro_gene=aro_gene, result=result, **creation_values)
 

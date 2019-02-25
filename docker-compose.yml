@@ -5,10 +5,12 @@ services:
   db:
     image: postgres:9.6.9
     restart: always
+    volumes:
+      - ${DATABASE_LOCAL_FOLDER}:/var/lib/postgresql
     environment:
-      POSTGRES_USER: bac
-      POSTGRES_PASSWORD: E7470
-      POSTGRES_DB: bac
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
   adminer:
     image: adminer
     restart: always
@@ -20,8 +22,8 @@ services:
       - "8090:80"
     volumes:
       - ./deploy/nginx.conf:/etc/nginx/conf.d/default.conf
-      - /tmp/bac_static:/static
-      - /tmp/bac_media:/media
+      - ${STATIC_LOCAL_FOLDER}:/static
+      - ${MEDIA_LOCAL_FOLDER}:/media
     depends_on:
       - web
   rabbitmq:
@@ -39,8 +41,8 @@ services:
     command: ./run_web.sh
     volumes:
       - .:/app  # mount current directory inside container
-      - /tmp/bac_static:/static
-      - /tmp/bac_media:/media
+      - ${STATIC_LOCAL_FOLDER}:/static
+      - ${MEDIA_LOCAL_FOLDER}:/media
     ports:
       - "8000:8000"
     # set up links so that web knows about db, rabbit and redis
@@ -49,23 +51,8 @@ services:
       - rabbitmq
     depends_on:
       - db
-    environment:
-      - CELERY_BROKER_URL=amqp://rabbitmq
-      - DATABASE_USER=bac
-      - DATABASE_PASSWORD=E7470
-      - DATABASE_NAME=bac
-      - DATABASE_HOST=db
-      - DATABASE_PORT=5432
-      - SUPERUSER=bac
-      - SUPERUSER_PASSWORD=bac
-      - SUPERUSER_EMAIL=bac@bac.com
-      - DJANGO_SETTINGS_MODULE=BaC.settings.dev
-      - ALLOWED_HOST=localhost;127.0.0.1;0.0.0.0;web
-      - STATIC_ROOT=/static
-      - MEDIA_ROOT=/media
-      - BAC_DB_PATH=/media
-      - BAC_SEQUENCE_RESULTS=/media/sequences/results
-      - BAC_REFERENCE=/media/sequences
+    env_file:
+      .env
 
   # Celery worker
   celery:
@@ -75,24 +62,9 @@ services:
     command: bash -c "cd /app; celery -A BaC worker -E -l info"
     volumes:
       - .:/app
-      - /tmp/bac_static:/static
-      - /tmp/bac_media:/media
+      - ${STATIC_LOCAL_FOLDER}:/static
+      - ${MEDIA_LOCAL_FOLDER}:/media
     depends_on:
       - rabbitmq
-    environment:
-      - CELERY_BROKER_URL=amqp://rabbitmq
-      - DATABASE_USER=bac
-      - DATABASE_PASSWORD=E7470
-      - DATABASE_NAME=bac
-      - DATABASE_HOST=db
-      - DATABASE_PORT=5432
-      - SUPERUSER=bac
-      - SUPERUSER_PASSWORD=bac
-      - SUPERUSER_EMAIL=bac@bac.com
-      - DJANGO_SETTINGS_MODULE=BaC.settings.dev
-      - ALLOWED_HOST=localhost;127.0.0.1;0.0.0.0;web
-      - STATIC_ROOT=/static
-      - MEDIA_ROOT=/media
-      - BAC_DB_PATH=/media
-      - BAC_SEQUENCE_RESULTS=/media/sequences/results
-      - BAC_REFERENCE=/media/sequences
+    env_file:
+      .env

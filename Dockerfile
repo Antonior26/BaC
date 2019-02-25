@@ -5,6 +5,7 @@ RUN wget https://github.com/TheSEED/RASTtk-Distribution/releases/download/v1.2.0
 ENV PYTHONUNBUFFERED 1
 
 # add requirements.txt to the image
+ADD . app/
 ADD environment.yml /app/environment.yml
 
 # set working directory to /app/
@@ -22,3 +23,4 @@ RUN wget https://github.com/TheSEED/RASTtk-Distribution/releases/download/v1.2.0
 RUN dpkg -i rasttk-v1.2.0.deb; exit 0
 RUN apt-get install -f -y
 RUN cpanm install JSON::RPC::Client
+WORKDIR /app/
