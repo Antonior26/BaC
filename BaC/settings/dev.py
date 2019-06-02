@@ -1,6 +1,6 @@
 from .base import *
 import logging
 
-logging.disable(logging.CRITICAL)
+logging.basicConfig(level=logging.DEBUG)
 
 DEBUG = True
