@@ -64,6 +64,9 @@ services:
       - .:/app
       - ${STATIC_LOCAL_FOLDER}:/static
       - ${MEDIA_LOCAL_FOLDER}:/media
+      # needed to execute VirulenceFinder from Celery container
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
     depends_on:
       - rabbitmq
     env_file:
