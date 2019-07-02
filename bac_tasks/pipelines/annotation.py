@@ -26,11 +26,11 @@ WORKFLOW = {
           }},
          {"name": "resolve_overlapping_features",
           "resolve_overlapping_features_parameters": {}
-          },
-         {"name": "call_features_prophage_phispy"}
+          }
          ]
 }
 
+# TODO: {"name": "call_features_prophage_phispy"} has been removed due to failures, investigate and add again
 
 def run_annotation_pipeline(rast_create_genome, rast_process_genome, rast_export_genome, name, assembly, output_dir, sp):
     os.makedirs(output_dir, exist_ok=True)

@@ -6,7 +6,9 @@ class JobFailedException(Exception):
     pass
 
 
-def pipeline_step(command, *args, cwd=None):
+def pipeline_step(command, *args, **kwargs):
+    cwd = kwargs.get('cwd', None)
+
     if args:
         command = [command] + list(args)
         print(' '.join(command))
