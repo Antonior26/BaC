@@ -116,3 +116,5 @@ temp_dump_data
 
 # pycharm
 .idea/
+
+taxdump.tar.gz
