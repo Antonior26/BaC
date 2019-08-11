@@ -6,7 +6,7 @@ services:
     image: postgres:9.6.9
     restart: always
     volumes:
-      - ${DATABASE_LOCAL_FOLDER}:/var/lib/postgresql
+      - ${DATABASE_LOCAL_FOLDER}:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
