@@ -9,6 +9,7 @@ from Isolates.models import Sequence, Sample
 from bac_tasks.pipelines.annotation import run_annotation_pipeline
 from bac_tasks.pipelines.assembly import run_assembly_pipeline
 from bac_tasks.pipelines.resistance_analysis import run_resistance_pipeline
+from bac_tasks.pipelines.virulence_analysis import run_virulence_analysis_pipeline
 
 
 def get_result_path(instance):
@@ -26,6 +27,7 @@ class ComponentTask(models.Model):
         ('ANNOTATION', 'ANNOTATION'),
         ('COVERAGE', 'COVERAGE'),
         ('RESISTANCE_ANALYSIS', 'RESISTANCE_ANALYSIS'),
+        ('VIRULENCE_ANALYSIS', 'VIRULENCE_ANALYSIS'),
     )
 
     component_type = models.CharField(choices=COMPONENT_TYPES, editable=False, max_length=250)
@@ -81,6 +83,16 @@ class ComponentTask(models.Model):
         })
         params.update(self.additional_parameters)
         return run_resistance_pipeline, params
+
+    def get_virulence_analysis_command(self):
+        params = {
+            'db_path': '/databases/virulencefinder_db/',
+            'name': self.sample.identifier,
+            'assembly': self.sample.assembly,
+            'output_dir': self.result_folder
+        }
+        params.update(self.additional_parameters)
+        return run_virulence_analysis_pipeline, params
 
 
 @receiver(models.signals.post_save, sender=ComponentTask)

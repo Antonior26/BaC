@@ -45,3 +45,5 @@ dependencies:
     - python-dateutil==2.7.3
     - requests==2.18.4
     - urllib3==1.22
+    - tabulate==0.8.5
+    - cgecore==1.5.1

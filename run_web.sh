@@ -9,7 +9,7 @@ cd /media/
 wget https://card.mcmaster.ca/latest/data
 tar xvjf data
 rgi load -i card.json --local
-cd /app/
+cd /app/bac/
 echo "Running Migrations"
 python manage.py migrate --noinput
 # Create superuser and load reference data
