@@ -1,6 +1,6 @@
 from django.db import models
 
-from Isolates.models import Result
+from Isolates.models.result import Result
 
 
 class VirulenceFactor(models.Model):
@@ -18,8 +18,8 @@ class VirulenceFactor(models.Model):
 
 
 class VirulenceFactorHit(models.Model):
-    result = models.ForeignKey(Result, related_query_name='genes', related_name='result', on_delete=models.CASCADE)
-    virulence_factor = models.ForeignKey(VirulenceFactor, related_name='result', on_delete=models.PROTECT)
+    result = models.ForeignKey(Result, related_name='virulence_factor_hit', on_delete=models.CASCADE)
+    virulence_factor = models.ForeignKey(VirulenceFactor, related_name='virulence_factor_hit', on_delete=models.PROTECT)
     identifier = models.CharField(max_length=2555)
     contig = models.CharField(max_length=255)
     perc_identity = models.FloatField(editable=False)

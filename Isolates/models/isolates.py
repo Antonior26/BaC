@@ -6,7 +6,7 @@ from django.db import models
 from django.dispatch import receiver
 from django.urls import reverse
 
-from Isolates.models import AntibioticTest
+from Isolates.models.annotation import AntibioticTest
 from Isolates.models.species import Species
 from bac_tasks.tasks import run_component
 
@@ -14,11 +14,6 @@ from bac_tasks.tasks import run_component
 def sequence_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/<sample>/<sequence_id>/<filename>
     return 'sequence_results/{0}/{1}/{2}'.format(instance.sample, instance.identifier, filename)
-
-
-def sample_sequence_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/<sample>/<sequence_id>/<filename>
-    return 'reference_genomes/{0}/{1}'.format(instance.name, filename)
 
 
 def fq_validate_file_extension(value):

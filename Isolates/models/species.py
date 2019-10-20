@@ -1,6 +1,9 @@
 from django.db import models
 
-from Isolates.models.isolates import sample_sequence_directory_path
+
+def sample_sequence_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/<sample>/<sequence_id>/<filename>
+    return 'reference_genomes/{0}/{1}'.format(instance.name, filename)
 
 
 class ReferenceSpecies(models.Model):

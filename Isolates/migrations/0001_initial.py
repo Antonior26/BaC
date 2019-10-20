@@ -181,10 +181,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('identifier', models.CharField(max_length=255, primary_key=True, serialize=False)),
                 ('sequence_date', models.DateField()),
-                ('sequence_file_pair1', models.FileField(null=True, upload_to=Isolates.models.models.sequence_directory_path, validators=[
-                    Isolates.models.models.fq_validate_file_extension])),
-                ('sequence_file_pair2', models.FileField(null=True, upload_to=Isolates.models.models.sequence_directory_path, validators=[
-                    Isolates.models.models.fq_validate_file_extension])),
+                ('sequence_file_pair1', models.FileField(null=True, upload_to=Isolates.models.isolates.sequence_directory_path, validators=[
+                    Isolates.models.isolates.fq_validate_file_extension])),
+                ('sequence_file_pair2', models.FileField(null=True, upload_to=Isolates.models.isolates.sequence_directory_path, validators=[
+                    Isolates.models.isolates.fq_validate_file_extension])),
                 ('sample', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='Isolates.Sample')),
             ],
         ),
@@ -199,7 +199,7 @@ class Migration(migrations.Migration):
                 ('klass', models.CharField(max_length=255)),
                 ('phylum', models.CharField(max_length=255)),
                 ('kingdom', models.CharField(max_length=255)),
-                ('sequence_file', models.FileField(upload_to=Isolates.models.models.sample_sequence_directory_path)),
+                ('sequence_file', models.FileField(upload_to=Isolates.models.species.sample_sequence_directory_path)),
             ],
         ),
         migrations.AddField(
@@ -220,7 +220,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='isolate',
             name='resistance',
-            field=models.OneToOneField(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='resistances', to='Isolates.models.isolates.AntibioticTest'),
+            field=models.OneToOneField(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='resistances', to='Isolates.AntibioticTest'),
         ),
         migrations.AddField(
             model_name='isolate',
@@ -230,12 +230,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='isolate',
             name='susceptibility',
-            field=models.OneToOneField(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='susceptibilies', to='Isolates.models.isolates.AntibioticTest'),
+            field=models.OneToOneField(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='susceptibilies', to='Isolates.AntibioticTest'),
         ),
         migrations.AddField(
             model_name='humanontologyterm',
             name='ontology_term',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='Isolates.models.isolates.OntologyTerm'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='Isolates.OntologyTerm'),
         ),
         migrations.AddField(
             model_name='humanontologyterm',
@@ -250,7 +250,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='bacteriaontologyterm',
             name='ontology_term',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='Isolates.models.isolates.OntologyTerm'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='Isolates.OntologyTerm'),
         ),
         migrations.AddField(
             model_name='arogenematch',
