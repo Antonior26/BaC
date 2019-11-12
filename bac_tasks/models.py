@@ -4,7 +4,7 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.dispatch import receiver
 from django_celery_results.models import TaskResult
-from BaC.settings.settings_references import ANNOTATION_PATHS, BASE_RESULTS, RGI_PATHS, ASSEMBLY_PATHS
+from django.conf import settings
 from Isolates.models import Sequence, Sample
 from bac_tasks.pipelines.annotation import run_annotation_pipeline
 from bac_tasks.pipelines.assembly import run_assembly_pipeline
@@ -13,7 +13,7 @@ from bac_tasks.pipelines.virulence_analysis import run_virulence_analysis_pipeli
 
 
 def get_result_path(instance):
-    return '{0}/{1}/{2}/{3}/{4}'.format(BASE_RESULTS, instance.sample.isolate.identifier,
+    return '{0}/{1}/{2}/{3}/{4}'.format(settings.PIPELINE_RESULTS_URI, instance.sample.isolate.identifier,
                                         instance.sample.identifier, instance.component_type, instance.id
                                         )
 
@@ -49,11 +49,13 @@ class ComponentTask(models.Model):
             return self.get_annotation_command()
         elif self.component_type == 'RESISTANCE_ANALYSIS':
             return self.get_resistance_analysis_command()
+        elif self.component_type == 'VIRULENCE_ANALYSIS':
+            return self.get_virulence_analysis_command()
         else:
             raise NotImplementedError
 
     def get_assembly_command(self):
-        params = ASSEMBLY_PATHS
+        params = settings.ASSEMBLY_PATHS
         params.update({
             'name': self.sample.identifier,
             'read1': self.sample.sequence.sequence_file_pair1.path,
@@ -64,7 +66,7 @@ class ComponentTask(models.Model):
         return run_assembly_pipeline, params
 
     def get_annotation_command(self):
-        params = ANNOTATION_PATHS
+        params = settings.ANNOTATION_PATHS
         params.update({
             'name': self.sample.identifier,
             'assembly': self.sample.assembly,
@@ -75,9 +77,8 @@ class ComponentTask(models.Model):
         return run_annotation_pipeline, params
 
     def get_resistance_analysis_command(self):
-        params = RGI_PATHS
+        params = settings.RGI_PATHS
         params.update({
-            'name': self.sample.identifier,
             'assembly': self.sample.assembly,
             'output_dir': self.result_folder
         })
@@ -87,7 +88,6 @@ class ComponentTask(models.Model):
     def get_virulence_analysis_command(self):
         params = {
             'db_path': '/databases/virulencefinder_db/',
-            'name': self.sample.identifier,
             'assembly': self.sample.assembly,
             'output_dir': self.result_folder
         }

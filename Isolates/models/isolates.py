@@ -6,6 +6,7 @@ from django.db import models
 from django.dispatch import receiver
 from django.urls import reverse
 
+from BaC.settings.base import RAW_SEQUENCES_PATH
 from Isolates.models.annotation import AntibioticTest
 from Isolates.models.species import Species
 from bac_tasks.tasks import run_component
@@ -13,7 +14,7 @@ from bac_tasks.tasks import run_component
 
 def sequence_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/<sample>/<sequence_id>/<filename>
-    return 'sequence_results/{0}/{1}/{2}'.format(instance.sample, instance.identifier, filename)
+    return '{0}/{1}/{2}/{3}'.format(RAW_SEQUENCES_PATH, instance.sample, instance.identifier, filename)
 
 
 def fq_validate_file_extension(value):
@@ -130,10 +131,11 @@ class Sequence(models.Model):
                 sample = self.sample
                 sample.assembly = self.assembly_file.path
                 self.sample.save()
-                tasks = group([run_component.signature((self.sample.pk, 'ANNOTATION'), immutable=True),
-                               run_component.signature((self.sample.pk, 'RESISTANCE_ANALYSIS'), immutable=True),
-                               run_component.signature((self.sample.pk, 'VIRULENCE_ANALYSIS'), immutable=True)
-                               ])
+                tasks = group([
+                    # run_component.signature((self.sample.pk, 'ANNOTATION'), immutable=True),
+                    run_component.signature((self.sample.pk, 'RESISTANCE_ANALYSIS'), immutable=True),
+                    run_component.signature((self.sample.pk, 'VIRULENCE_ANALYSIS'), immutable=True)
+                ])
                 tasks.apply_async()
 
         else:

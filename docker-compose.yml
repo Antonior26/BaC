@@ -37,13 +37,10 @@ services:
 
   web:
     container_name: django_app
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: bac
     hostname: web
     command: ./run_web.sh
     volumes:
-      - .:/app/bac  # mount current directory inside container
       - ${STATIC_LOCAL_FOLDER}:/static
       - ${MEDIA_LOCAL_FOLDER}:/media
     ports:
@@ -60,12 +57,9 @@ services:
   # Celery worker
   celery:
     container_name: worker
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: bash -c "cd /app/bac; celery -A BaC worker -E -l info"
+    image: bac
+    command: bash -c "cd /app; celery -A BaC worker -E -l info"
     volumes:
-      - .:/app/bac
       - ${MEDIA_LOCAL_FOLDER}:/media
     depends_on:
       - rabbitmq

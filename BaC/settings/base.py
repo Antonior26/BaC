@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-from BaC.settings import settings_third_parties, settings_references
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -128,7 +127,7 @@ STATIC_ROOT = os.getenv(
 )
 
 STATIC_URL = '/static/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'reference')
+MEDIA_ROOT = '/media/'
 MEDIA_URL = '/media/'
 
 TEMPLATES = [
@@ -174,3 +173,35 @@ PLOT_PALETTE=[
 '#ee4444',
 '#775555',
 ]
+
+
+# PATHS
+
+RAW_SEQUENCES_PATH = os.getenv('BAC_SEQUENCES_RAW', 'sequences/raw')
+RAW_SEQUENCES_FOLDER = os.path.join(MEDIA_ROOT, RAW_SEQUENCES_PATH)
+PIPELINE_RESULTS_PATH = os.getenv('BAC_PIPELINE_RESULTS', 'sequences/results')
+PIPELINE_RESULTS_URI = os.path.join(MEDIA_ROOT, PIPELINE_RESULTS_PATH)
+
+
+ASSEMBLY_PATHS = dict(
+    spades_path=os.getenv('BAC_SPADES_PATH', 'spades.py'),
+    velveth_path=os.getenv('BAC_VELVETH_PATH', 'velveth'),
+    velvetg_path=os.getenv('BAC_VELVETG_PATH', 'velvetg'),
+    qc_path=os.getenv('BAC_QC_PATH', ''),
+)
+
+
+ANNOTATION_PATHS = dict(
+    rast_create_genome=os.getenv('BAC_RAST_CREATE_GENOME', 'rast-create-genome'),
+    rast_process_genome=os.getenv('BAC_RAST_PROCESS_GENOME', 'rast-process-genome'),
+    rast_export_genome=os.getenv('BAC_RAST_EXPORT_GENOME', 'rast-export-genome'),
+
+)
+
+RGI_PATHS = dict(
+    rgi_path=os.getenv('BAC_RGI_PATH', 'rgi'),
+    db_path=os.getenv('BAC_DB_PATH', MEDIA_ROOT),
+)
+
+BWA = os.getenv('BAC_BWA', '/usr/bin/bwa')
+FASTQC = os.getenv('BAC_FASTQC', '/usr/bin/fastqc')
