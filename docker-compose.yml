@@ -6,11 +6,13 @@ services:
     image: postgres:9.6.9
     restart: always
     volumes:
-      - ${DATABASE_LOCAL_FOLDER}:/var/lib/postgresql
+      - ${DATABASE_LOCAL_FOLDER}:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       POSTGRES_DB: ${DATABASE_NAME}
+    env_file:
+      .env
   adminer:
     image: adminer
     restart: always
@@ -34,13 +36,11 @@ services:
       - "15672:15672"  # here, we can access rabbitmq management plugin
 
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    container_name: django_app
+    image: bac
     hostname: web
     command: ./run_web.sh
     volumes:
-      - .:/app  # mount current directory inside container
       - ${STATIC_LOCAL_FOLDER}:/static
       - ${MEDIA_LOCAL_FOLDER}:/media
     ports:
@@ -56,25 +56,12 @@ services:
 
   # Celery worker
   celery:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    container_name: worker
+    image: bac
     command: bash -c "cd /app; celery -A BaC worker -E -l info"
     volumes:
-      - .:/app
-      - ${STATIC_LOCAL_FOLDER}:/static
       - ${MEDIA_LOCAL_FOLDER}:/media
-      # needed to execute VirulenceFinder from Celery container
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /usr/bin/docker:/usr/bin/docker
-      - /usr/lib/x86_64-linux-gnu/libltdl.so.7:/usr/lib/x86_64-linux-gnu/libltdl.so.7
     depends_on:
       - rabbitmq
     env_file:
       .env
-
-  virulencefinder:
-    build:
-      context: https://bitbucket.org/genomicepidemiology/virulencefinder.git
-      dockerfile: Dockerfile
-    entrypoint: /test/test.sh virulencefinder 

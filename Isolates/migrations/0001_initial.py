@@ -181,8 +181,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('identifier', models.CharField(max_length=255, primary_key=True, serialize=False)),
                 ('sequence_date', models.DateField()),
-                ('sequence_file_pair1', models.FileField(null=True, upload_to=Isolates.models.sequence_directory_path, validators=[Isolates.models.fq_validate_file_extension])),
-                ('sequence_file_pair2', models.FileField(null=True, upload_to=Isolates.models.sequence_directory_path, validators=[Isolates.models.fq_validate_file_extension])),
+                ('sequence_file_pair1', models.FileField(null=True, upload_to=Isolates.models.isolates.sequence_directory_path, validators=[
+                    Isolates.models.isolates.fq_validate_file_extension])),
+                ('sequence_file_pair2', models.FileField(null=True, upload_to=Isolates.models.isolates.sequence_directory_path, validators=[
+                    Isolates.models.isolates.fq_validate_file_extension])),
                 ('sample', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='Isolates.Sample')),
             ],
         ),
@@ -197,7 +199,7 @@ class Migration(migrations.Migration):
                 ('klass', models.CharField(max_length=255)),
                 ('phylum', models.CharField(max_length=255)),
                 ('kingdom', models.CharField(max_length=255)),
-                ('sequence_file', models.FileField(upload_to=Isolates.models.sample_sequence_directory_path)),
+                ('sequence_file', models.FileField(upload_to=Isolates.models.species.sample_sequence_directory_path)),
             ],
         ),
         migrations.AddField(

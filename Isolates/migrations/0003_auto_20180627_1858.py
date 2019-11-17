@@ -18,6 +18,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='sequence',
             name='assembly_file',
-            field=models.FileField(null=True, upload_to=Isolates.models.sequence_directory_path, validators=[Isolates.models.fa_validate_file_extension]),
+            field=models.FileField(null=True, upload_to=Isolates.models.isolates.sequence_directory_path, validators=[
+                Isolates.models.isolates.fa_validate_file_extension]),
         ),
     ]

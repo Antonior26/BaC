@@ -14,16 +14,19 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='sequence',
             name='assembly_file',
-            field=models.FileField(blank=True, null=True, upload_to=Isolates.models.sequence_directory_path, validators=[Isolates.models.fa_validate_file_extension]),
+            field=models.FileField(blank=True, null=True, upload_to=Isolates.models.isolates.sequence_directory_path, validators=[
+                Isolates.models.isolates.fa_validate_file_extension]),
         ),
         migrations.AlterField(
             model_name='sequence',
             name='sequence_file_pair1',
-            field=models.FileField(blank=True, null=True, upload_to=Isolates.models.sequence_directory_path, validators=[Isolates.models.fq_validate_file_extension]),
+            field=models.FileField(blank=True, null=True, upload_to=Isolates.models.isolates.sequence_directory_path, validators=[
+                Isolates.models.isolates.fq_validate_file_extension]),
         ),
         migrations.AlterField(
             model_name='sequence',
             name='sequence_file_pair2',
-            field=models.FileField(blank=True, null=True, upload_to=Isolates.models.sequence_directory_path, validators=[Isolates.models.fq_validate_file_extension]),
+            field=models.FileField(blank=True, null=True, upload_to=Isolates.models.isolates.sequence_directory_path, validators=[
+                Isolates.models.isolates.fq_validate_file_extension]),
         ),
     ]
