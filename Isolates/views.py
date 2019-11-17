@@ -6,9 +6,10 @@ from django_tables2 import SingleTableMixin
 
 from Isolates.filtersets import IsolateFilter
 from Isolates.forms import PatientForm, IsolateForm
-from Isolates.models import Isolate, Species, AroGeneMatch, Patient, AroGene, RastResult, Sample
+from Isolates.models import Isolate, Species, AroGeneMatch, Patient, AroGene, RastResult, Sample, VirulenceFactorHit
 from Isolates.plots import IsolatePlots, GeneMatchPlots
-from Isolates.tables import IsolateTable, AroGeneTable, RastResultTable
+from Isolates.tables import IsolateTable, AroGeneTable, RastResultTable, VirulenceFinderTable
+from bac_tasks.models import ComponentTask
 
 
 class IsolateList(SingleTableMixin, FilterView):
@@ -202,15 +203,20 @@ class SampleResult(DetailView):
     template_name = 'sample_tasks/rast_result.html'
 
     def get_template_names(self):
+        print(self.kwargs['tool'])
         if self.kwargs['tool'] == 'ANNOTATION':
             return super(SampleResult, self).get_template_names()
-        elif self.kwargs['tool'] =='RESISTANCE_ANALYSIS':
+        elif self.kwargs['tool'] == 'RESISTANCE_ANALYSIS':
+            return 'sample_tasks/resistance_result.html'
+        elif self.kwargs['tool'] == 'VIRULENCE_ANALYSIS':
             return 'sample_tasks/resistance_result.html'
 
     def get_table(self):
         table = None
         if self.kwargs['tool'] == 'RESISTANCE_ANALYSIS':
             table = AroGeneTable(data=AroGene.objects.filter(result__result__sample=self.object))
+        elif self.kwargs['tool'] == 'VIRULENCE_ANALYSIS':
+            table = VirulenceFinderTable(data=VirulenceFactorHit.objects.filter(result__sample=self.object))
         elif self.kwargs['tool'] == 'ANNOTATION':
             if self.object.rast_folder:
                 with open(
@@ -223,7 +229,6 @@ class SampleResult(DetailView):
                 table = RastResult(data=[])
 
         return table
-
 
     def get_context_data(self, **kwargs):
         context = super(SampleResult, self).get_context_data(**kwargs)

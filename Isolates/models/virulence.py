@@ -31,7 +31,7 @@ class VirulenceFactorHit(models.Model):
 
     @classmethod
     def from_virulence_finder_result(cls, hit, species, db_name, result):
-        vf = VirulenceFactor.objects.get_or_create(
+        vf, created = VirulenceFactor.objects.get_or_create(
                 virulence_factor_id=hit.get('contig_name'),
                 defaults=dict(
                     db_name=db_name,
@@ -49,8 +49,8 @@ class VirulenceFactorHit(models.Model):
             perc_identity=float(hit.get('identity')),
             hsp_length=int(hit.get('HSP_length')),
             template_length=int(hit.get('template_length')),
-            position_in_ref=int(hit.get('position_in_ref')),
-            positions_in_contig=int(hit.get('positions_in_contig'))
+            position_in_ref=hit.get('position_in_ref'),
+            positions_in_contig=hit.get('positions_in_contig')
         )
 
 

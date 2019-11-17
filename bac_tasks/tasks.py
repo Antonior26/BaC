@@ -46,12 +46,12 @@ def run_component(sample_id, component_type):
             sample.rast_folder = result
         elif component_type == 'RESISTANCE_ANALYSIS':
             sample.rgi_results = result
-            result_model.objects.filter(sample=sample).delete()
+            result_model.objects.filter(sample=sample, type=component_type).delete()
             g = json.load(open(sample.rgi_results))
             result_model.from_rgi_result(g, sample, (sample.sequence, ))
         elif component_type == 'VIRULENCE_ANALYSIS':
             sample.virulence_finder_results = result
-            result_model.objects.filter(sample=sample).delete()
+            result_model.objects.filter(sample=sample, type=component_type).delete()
             g = json.load(open(sample.virulence_finder_results))
             result_model.from_virulence_finder_result(g, sample, (sample.sequence, ))
 
