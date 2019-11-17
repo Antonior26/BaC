@@ -28,7 +28,7 @@ class Result(models.Model):
                                                                           ).get('results', [])
         for species in virulence_finder_results_by_species:
             for db_name in virulence_finder_results_by_species[species]:
-                if db_name != "No hit found":
+                if virulence_finder_results_by_species[species][db_name] != "No hit found":
                     for db_result in virulence_finder_results_by_species[species][db_name]:
                         VirulenceFactorHit.from_virulence_finder_result(
                             result=result,
