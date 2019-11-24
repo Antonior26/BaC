@@ -9,6 +9,7 @@ dependencies:
   - prodigal=2.6.3=0
   - rgi==4.2.2
   - spades==3.13.0
+  - refseq_masher=0.1.1=py36_1
   - biopython=1.71=py36h637b7d7_0
   - bzip2=1.0.6=h9a117a8_4
   - django=2.0.5=py36hd476221_0

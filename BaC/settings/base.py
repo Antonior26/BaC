@@ -182,6 +182,8 @@ RAW_SEQUENCES_FOLDER = os.path.join(MEDIA_ROOT, RAW_SEQUENCES_PATH)
 PIPELINE_RESULTS_PATH = os.getenv('BAC_PIPELINE_RESULTS', 'sequences/results')
 PIPELINE_RESULTS_URI = os.path.join(MEDIA_ROOT, PIPELINE_RESULTS_PATH)
 
+TMP = os.getenv('TMP', '/tmp/')
+
 
 ASSEMBLY_PATHS = dict(
     spades_path=os.getenv('BAC_SPADES_PATH', 'spades.py'),
@@ -198,10 +200,26 @@ ANNOTATION_PATHS = dict(
 
 )
 
+VIRULENCE_FINDER_PATHS = dict(
+    virulence_finder=os.getenv('VIRULENCE_FINDER_PATH', '/opt/virulencefinder/virulencefinder.py'),
+    db_path=os.getenv('VIRULENCE_FINDER_DB_PATH', '/databases/virulencefinder_db/')
+)
+
+
 RGI_PATHS = dict(
     rgi_path=os.getenv('BAC_RGI_PATH', 'rgi'),
     db_path=os.getenv('BAC_DB_PATH', MEDIA_ROOT),
 )
 
+
+REFSEQ_MASHER_PATHS = dict(
+    refseq_masher_path=os.getenv('REFSEQ_MASHER_PATH', 'refseq_masher')
+)
+
 BWA = os.getenv('BAC_BWA', '/usr/bin/bwa')
 FASTQC = os.getenv('BAC_FASTQC', '/usr/bin/fastqc')
+
+
+# SYSTEM_SPECS
+
+ASSEMBLY_THREADS = os.getenv('ASSEMBLY_THREADS', '2')

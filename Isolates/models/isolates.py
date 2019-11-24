@@ -66,7 +66,7 @@ class HumanOntologyTerm(models.Model):
 
 class Isolate(models.Model):
     identifier = models.CharField(max_length=255, primary_key=True)
-    species = models.ForeignKey(Species, on_delete=models.CASCADE, related_name='species')
+    species = models.ForeignKey(Species, on_delete=models.CASCADE, related_name='species', blank=True, null=True)
     collection_date = models.DateField()
     culture_type = models.CharField(max_length=255)
     tissue_origin = models.CharField(max_length=255)
@@ -115,7 +115,8 @@ class Sequence(models.Model):
                                            validators=[fq_validate_file_extension])
     sequence_file_pair2 = models.FileField(upload_to=sequence_directory_path, null=True, blank=True,
                                            validators=[fq_validate_file_extension])
-    assembly_file = models.FileField(upload_to=sequence_directory_path, null=True, validators=[fa_validate_file_extension], blank=True)
+    assembly_file = models.FileField(upload_to=sequence_directory_path, null=True,
+                                     validators=[fa_validate_file_extension], blank=True)
 
     def __str__(self):
         return '{0} ({1})'.format(self.identifier, self.sample.identifier)
@@ -123,20 +124,27 @@ class Sequence(models.Model):
     def run_pipeline(self):
         if not self.sample.component.filter(task__status='STARTED'):
             if self.sequence_file_pair1 and self.sequence_file_pair2:
-                run_component.apply_async((self.sample.pk, 'ASSEMBLY'), link=group(
-                    run_component.signature((self.sample.pk, 'ANNOTATION'), immutable=True),
-                    run_component.signature((self.sample.pk, 'RESISTANCE_ANALYSIS'), immutable=True)
-                ))
+                workflow = (group(
+                    run_component.si(self.sample.pk, 'ASSEMBLY'),
+                    run_component.si(self.sample.pk, 'REFSEQ_MASHER')) |
+                            group(
+                                run_component.si(self.sample.pk, 'ANNOTATION'),
+                                run_component.si(self.sample.pk, 'RESISTANCE_ANALYSIS'),
+                                run_component.si(self.sample.pk, 'VIRULENCE_ANALYSIS')
+                            ))
+                workflow.apply_async()
+
             elif self.assembly_file:
                 sample = self.sample
                 sample.assembly = self.assembly_file.path
                 self.sample.save()
-                tasks = group([
-                    # run_component.signature((self.sample.pk, 'ANNOTATION'), immutable=True),
-                    run_component.signature((self.sample.pk, 'RESISTANCE_ANALYSIS'), immutable=True),
-                    run_component.signature((self.sample.pk, 'VIRULENCE_ANALYSIS'), immutable=True)
-                ])
-                tasks.apply_async()
+                workflow = (run_component.si(self.sample.pk, 'REFSEQ_MASHER') |
+                            group(
+                                run_component.si(self.sample.pk, 'ANNOTATION'),
+                                run_component.si(self.sample.pk, 'RESISTANCE_ANALYSIS'),
+                                run_component.si(self.sample.pk, 'VIRULENCE_ANALYSIS')
+                            ))
+                workflow.apply_async()
 
         else:
             raise Exception('Another pipeline is already running')

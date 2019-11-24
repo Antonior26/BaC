@@ -11,11 +11,10 @@ from ete3 import NCBITaxa
 logging.basicConfig(level=logging.INFO)
 
 
-@shared_task(autoretry_for=(Exception,), default_retry_delay=10)
+@shared_task(autoretry_for=(Exception,), default_retry_delay=10, max_retries=1)
 def run_component(sample_id, component_type):
     component_task_model = apps.get_model('bac_tasks', 'ComponentTask')
     sample_model = apps.get_model('Isolates', 'Sample')
-    result_model = apps.get_model('Isolates', 'Result')
     logging.info(component_task_model)
     sample = sample_model.objects.get(pk=sample_id)
     logging.info(sample.pk)
@@ -33,29 +32,13 @@ def run_component(sample_id, component_type):
     component_task.save()
     start_time = time.time()
     try:
-        method, parameters = component_task.get_command()
-        result = method(**parameters)
+        component = component_task.get_component()
+        component.execute()
+        component.post_run()
         seconds = time.time() - start_time
         logging.info("Task succeeded in {} seconds!".format(seconds))
         component_task.seconds = int(seconds)
         component_task.save(update_fields=["seconds"])
-
-        if component_type == 'ASSEMBLY':
-            sample.assembly = result
-        elif component_type == 'ANNOTATION':
-            sample.rast_folder = result
-        elif component_type == 'RESISTANCE_ANALYSIS':
-            sample.rgi_results = result
-            result_model.objects.filter(sample=sample, type=component_type).delete()
-            g = json.load(open(sample.rgi_results))
-            result_model.from_rgi_result(g, sample, (sample.sequence, ))
-        elif component_type == 'VIRULENCE_ANALYSIS':
-            sample.virulence_finder_results = result
-            result_model.objects.filter(sample=sample, type=component_type).delete()
-            g = json.load(open(sample.virulence_finder_results))
-            result_model.from_virulence_finder_result(g, sample, (sample.sequence, ))
-
-        sample.save()
 
     except Exception as ex:
         seconds = time.time() - start_time
