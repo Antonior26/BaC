@@ -11,17 +11,21 @@ RUN apt-get update && apt-get install build-essential libz-dev ntp -y
 ADD environment.yml .
 RUN conda env create python=3.6 --file environment.yml
 
-# Install kma and virulence finder
-WORKDIR /opt/virulencefinder/
+# Install kma 
+WORKDIR /opt/
 RUN git clone https://bitbucket.org/genomicepidemiology/kma.git
-RUN cd kma && make && cd /opt/virulencefinder/
+RUN cd kma && make
+
+# Install VirulenceFinder and database
+WORKDIR /opt/
 RUN git clone https://bitbucket.org/genomicepidemiology/virulencefinder.git
 RUN cp virulencefinder/virulencefinder.py .
-
 WORKDIR /databases/
 RUN git clone https://bitbucket.org/genomicepidemiology/virulencefinder_db.git
 WORKDIR /databases/virulencefinder_db
-RUN python INSTALL.py /opt/virulencefinder/kma/kma_index
+RUN python INSTALL.py /opt/kma/kma_index
+
+######
 
 FROM ${DOCKER_IMAGE_BASE} as base
 
@@ -30,6 +34,28 @@ COPY --from=venv /opt/virulencefinder/ /opt/virulencefinder/
 COPY --from=venv /opt/conda/envs /opt/conda/envs
 RUN echo "source activate env" > ~/.bashrc
 ENV PATH /opt/conda/envs/env/bin:/opt/conda/bin:$PATH
+
+# Install MentaLIST and database
+
+WORKDIR /opt/
+RUN julia -e 'using Pkg; Pkg.add("Distributed")'
+RUN julia -e 'using Pkg; Pkg.add("ArgParse")'
+RUN julia -e 'using Pkg; Pkg.add("BioSequences")'
+RUN julia -e 'using Pkg; Pkg.add("JSON")'
+RUN julia -e 'using Pkg; Pkg.add("DataStructures")'
+RUN julia -e 'using Pkg; Pkg.add("JLD")'
+RUN julia -e 'using Pkg; Pkg.add("GZip")'
+RUN julia -e 'using Pkg; Pkg.add("Blosc")'
+RUN julia -e 'using Pkg; Pkg.add("FileIO")'
+RUN julia -e 'using Pkg; Pkg.add("TextWrap")'
+RUN julia -e 'using Pkg; Pkg.add("LightXML")'
+RUN git clone https://github.com/WGS-TB/MentaLiST.git
+
+WORKDIR /databases/mentalist_db/
+ADD databases/mentalist_db/ /databases/mentalist_db/
+COPY download_mentalist_databases.sh .
+RUN PATH=$PATH:/opt/MentaLiST/src/; \
+	./download_mentalist_databases.sh
 
 # Install perl. TODO: find a better way of installing perl
 RUN apt-get update && apt-get install build-essential libz-dev ntp -y
