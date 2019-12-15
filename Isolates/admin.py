@@ -8,7 +8,11 @@ from Isolates.models import Isolate, Species, Patient, Sample, Sequence, Antibio
 class IsolateAdmin(admin.ModelAdmin):
     list_filter = ['collection_date']
     search_fields = ['species__name']
-    list_display = ('collection_date', 'species')
+    list_display = ('collection_date', 'species', 'samples')
+    readonly_fields = ('samples',)
+
+    def samples(self, obj):
+        return obj.get_samples_names()
 
 
 class AroGeneAdmin(admin.ModelAdmin):
