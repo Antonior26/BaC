@@ -35,7 +35,7 @@ class Species(models.Model):
     klass = models.CharField(max_length=255, null=False, blank=False)
     phylum = models.CharField(max_length=255, null=False, blank=False)
     kingdom = models.CharField(max_length=255, null=False, blank=False)
-    sequence_file = models.FileField(upload_to=sample_sequence_directory_path)
+    sequence_file = models.FileField(upload_to=sample_sequence_directory_path, null=True, blank=True)
 
     def get_absolute_url(self):
         from django.urls import reverse
