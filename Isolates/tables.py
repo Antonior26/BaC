@@ -37,7 +37,7 @@ class VirulenceFinderTable(tables.Table):
 
     class Meta:
         model = VirulenceFactorHit
-        fields = ['name', 'accession', 'species', 'protein_function', 'contig', 'perc_identity', 'hsp_length', 'template_length', 'position_in_ref',
+        fields = ['identifier', 'name', 'accession', 'species', 'protein_function', 'contig', 'perc_identity', 'hsp_length', 'template_length', 'position_in_ref',
                 'positions_in_contig']
         # exclude = ['model_id', 'model_type_id', 'aro_id', 'model_description', 'model_name']
         template_name = 'django_tables2/bootstrap4.html'
