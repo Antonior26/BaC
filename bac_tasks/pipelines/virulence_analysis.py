@@ -16,7 +16,7 @@ class Virulence(PipelineComponent):
         os.makedirs(self.result_folder, exist_ok=True)
         out = os.path.join(self.result_folder, 'data.json')
         self.pipeline_step(virulence_finder, '-i', self.sample.assembly, '-o', self.result_folder, '-p', db_path,
-                           '--threshold', '0.8')
+                           '--threshold', '0.9')
         return out
 
     def post_run(self):

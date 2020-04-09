@@ -102,6 +102,7 @@ class Sample(models.Model):
     rast_folder = models.CharField(max_length=2555, null=True, editable=False)
     rgi_results = models.CharField(max_length=2555, null=True, editable=False)
     virulence_finder_results = models.CharField(max_length=2555, null=True, editable=False)
+    resistance_finder_results = models.CharField(max_length=2555, null=True, editable=False)
 
     def __str__(self):
         return self.identifier
@@ -130,7 +131,8 @@ class Sequence(models.Model):
                             group(
                                 run_component.si(self.sample.pk, 'ANNOTATION'),
                                 run_component.si(self.sample.pk, 'RESISTANCE_ANALYSIS'),
-                                run_component.si(self.sample.pk, 'VIRULENCE_ANALYSIS')
+                                run_component.si(self.sample.pk, 'VIRULENCE_ANALYSIS'),
+                                run_component.si(self.sample.pk, 'RESFINDER_ANALYSIS')
                             ))
                 workflow.apply_async()
 
@@ -142,7 +144,8 @@ class Sequence(models.Model):
                             group(
                                 run_component.si(self.sample.pk, 'ANNOTATION'),
                                 run_component.si(self.sample.pk, 'RESISTANCE_ANALYSIS'),
-                                run_component.si(self.sample.pk, 'VIRULENCE_ANALYSIS')
+                                run_component.si(self.sample.pk, 'VIRULENCE_ANALYSIS'),
+                                run_component.si(self.sample.pk, 'RESFINDER_ANALYSIS')
                             ))
                 workflow.apply_async()
 

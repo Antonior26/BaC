@@ -118,3 +118,6 @@ temp_dump_data
 .idea/
 
 taxdump.tar.gz
+
+# mentalist database
+databases/mentalist_db/

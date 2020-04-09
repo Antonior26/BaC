@@ -1,15 +1,13 @@
 from django.db.models import Count, Max, Min
-from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin
 
 from Isolates.filtersets import IsolateFilter
 from Isolates.forms import PatientForm, IsolateForm
-from Isolates.models import Isolate, Species, AroGeneMatch, Patient, AroGene, RastResult, Sample, VirulenceFactorHit
+from Isolates.models import Isolate, AroGeneMatch, Patient, AroGene, RastResult, Sample, VirulenceFactorHit
 from Isolates.plots import IsolatePlots, GeneMatchPlots
 from Isolates.tables import IsolateTable, AroGeneTable, RastResultTable, VirulenceFinderTable
-from bac_tasks.models import ComponentTask
 
 
 class IsolateList(SingleTableMixin, FilterView):

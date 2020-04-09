@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'el_pagination',
     'django_tables2',
     'django_filters',
-     'django_extensions',
+    'django_extensions',
     'bootstrap4'
 
 ]
@@ -205,6 +205,10 @@ VIRULENCE_FINDER_PATHS = dict(
     db_path=os.getenv('VIRULENCE_FINDER_DB_PATH', '/databases/virulencefinder_db/')
 )
 
+RES_FINDER_PATHS = dict(
+    res_finder=os.getenv('RES_FINDER_PATH', '/opt/resfinder/resfinder.py'),
+    db_path=os.getenv('RES_FINDER_DB_PATH', '/databases/resfinder_db/')
+)
 
 RGI_PATHS = dict(
     rgi_path=os.getenv('BAC_RGI_PATH', 'rgi'),

@@ -18,7 +18,13 @@ RUN cd kma && make && cd /opt/virulencefinder/
 RUN git clone https://bitbucket.org/genomicepidemiology/virulencefinder.git
 RUN cp virulencefinder/virulencefinder.py .
 
+# Install Resfinder
+WORKDIR /opt/
+RUN git clone https://bitbucket.org/genomicepidemiology/resfinder.git
+
+# Install Virulencefinder ans Resfinder databases
 WORKDIR /databases/
+RUN git clone https://git@bitbucket.org/genomicepidemiology/resfinder_db.git
 RUN git clone https://bitbucket.org/genomicepidemiology/virulencefinder_db.git
 WORKDIR /databases/virulencefinder_db
 RUN python INSTALL.py /opt/virulencefinder/kma/kma_index
@@ -27,6 +33,7 @@ FROM ${DOCKER_IMAGE_BASE} as base
 
 COPY --from=venv /databases/ /databases/
 COPY --from=venv /opt/virulencefinder/ /opt/virulencefinder/
+COPY --from=venv /opt/resfinder/ /opt/resfinder/
 COPY --from=venv /opt/conda/envs /opt/conda/envs
 RUN echo "source activate env" > ~/.bashrc
 ENV PATH /opt/conda/envs/env/bin:/opt/conda/bin:$PATH

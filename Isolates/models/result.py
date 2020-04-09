@@ -35,7 +35,26 @@ class Result(models.Model):
                             hit=virulence_finder_results_by_species[species][db_name][db_result],
                             species=species,
                             db_name=db_name
-                    )
+                        )
+
+    @classmethod
+    def from_resistance_finder_result(cls, resfinder_result, sample, sequences=()):
+        from Isolates.models.resfinder import ResistanceFactorHit
+        result = cls.objects.create(sample=sample, type='RESFINDER_ANALYSIS')
+        for s in sequences:
+            result.sequences.add(s)
+        resfinder_results_by_antibiotic = resfinder_result.get('resfinder', {}
+                                                                            ).get('results', {})
+        for antibiotic in resfinder_results_by_antibiotic:
+            for db_name in resfinder_results_by_antibiotic[antibiotic]:
+                if resfinder_results_by_antibiotic[antibiotic][db_name] != "No hit found":
+                    for hit in resfinder_results_by_antibiotic[antibiotic][db_name]:
+                        ResistanceFactorHit.from_resistance_finder_result(
+                            resfinder_id = hit,
+                            result=result,
+                            hit=resfinder_results_by_antibiotic[antibiotic][db_name][hit],
+                            antibiotic=antibiotic
+                        )
 
     @classmethod
     def from_rgi_result_randomize(cls, all_hits, sample, sequences=()):

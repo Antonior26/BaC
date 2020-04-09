@@ -7,6 +7,7 @@ from django_celery_results.models import TaskResult
 from django.conf import settings
 from Isolates.models import Sample
 from bac_tasks.pipelines import COMPONENT_TYPES, Assembly, Annotation, Resistance, Virulence, SeqMash
+from bac_tasks.pipelines.resfinder_analysis import Resfinder
 
 
 def get_result_path(instance):
@@ -37,6 +38,8 @@ class ComponentTask(models.Model):
             component = Resistance
         elif self.component_type == 'VIRULENCE_ANALYSIS':
             component = Virulence
+        elif self.component_type == 'RESFINDER_ANALYSIS':
+            component = Resfinder
         elif self.component_type == 'REFSEQ_MASHER':
             component = SeqMash
         else:
