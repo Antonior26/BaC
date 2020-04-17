@@ -6,3 +6,4 @@ from Isolates.models.virulence import VirulenceFactor, VirulenceFactorHit
 from Isolates.models.rast import RastResult
 from Isolates.models.result import Result
 from Isolates.models.species import ReferenceSpecies, Species
+from Isolates.models.resfinder import ResistanceFactor, ResistanceFactorHit
